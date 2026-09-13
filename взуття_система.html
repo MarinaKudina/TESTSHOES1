@@ -258,7 +258,7 @@ function encodeSheet(name) {
 }
 
 async function loadSheet(sheetName) {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeSheet(sheetName)}`;
+  const url = `https://docs.google.com/spreadsheets/d/${1Fx0bib3W7AAcP2h2glA6tS93fGiCucEeNSSNiMat8qk}/gviz/tq?tqx=out:csv&sheet=${encodeSheet(sheetName)}`;
   const res = await fetch(url);
   const text = await res.text();
   return parseCSV(text);
