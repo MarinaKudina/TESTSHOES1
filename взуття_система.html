@@ -425,7 +425,7 @@ function openSale(name) {
   document.getElementById('extraLabel').style.display = '';
   document.getElementById('extraLabel').textContent = 'Продавець';
   document.getElementById('modalExtra').style.display = '';
-  document.getElementById('modalExtra').placeholder = 'Ім'я продавця';
+  document.getElementById('modalExtra').placeholder = 'Імя продавця';
   document.getElementById('modalExtra').value = lastSeller;
   document.getElementById('modalConfirm').textContent = 'Підтвердити продаж';
 
@@ -453,7 +453,7 @@ function openReturn(name) {
   document.getElementById('modalSubtitle').textContent = shoe.name;
   document.getElementById('sizeLabel').textContent = 'Оберіть розмір';
   document.getElementById('extraLabel').style.display = '';
-  document.getElementById('extraLabel').textContent = 'Причина (необов'язково)';
+  document.getElementById('extraLabel').textContent = 'Причина (необовязково)';
   document.getElementById('modalExtra').style.display = '';
   document.getElementById('modalExtra').placeholder = 'Наприклад: не підійшов розмір';
   document.getElementById('modalExtra').value = '';
@@ -481,7 +481,7 @@ async function confirmModal() {
   const confirmBtn = document.getElementById('modalConfirm');
 
   if (!size) { toast('Оберіть розмір', true); return; }
-  if (modalMode === 'sale' && !extra) { toast('Вкажіть ім'я продавця', true); return; }
+  if (modalMode === 'sale' && !extra) { toast('Вкажіть імя продавця', true); return; }
 
   confirmBtn.disabled = true;
   confirmBtn.innerHTML = '<span class="spinner"></span>Запис...';
