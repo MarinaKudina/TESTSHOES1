@@ -5,26 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Склад взуття</title>
 <style>
-/* ══════════════════════════════════════════
-   НАЛАШТУВАННЯ — замінити перед використанням
-   ══════════════════════════════════════════ */
-/* SHEET_ID та APPS_SCRIPT_URL задаються в JS нижче */
-
 :root {
-  --bg: #1a1a2e; --surface: #16213e; --card: #0f3460;
-  --accent: #e94560; --accent2: #53d8fb; --text: #eaeaea;
-  --muted: #8892a4; --green: #2ecc71; --yellow: #f39c12;
-  --red: #e74c3c; --radius: 10px; --border: #1e2d50;
-  --modal-bg: rgba(0,0,0,.7);
+  --bg:#1a1a2e;--surface:#16213e;--card:#0f3460;
+  --accent:#e94560;--accent2:#53d8fb;--text:#eaeaea;
+  --muted:#8892a4;--green:#2ecc71;--yellow:#f39c12;
+  --red:#e74c3c;--radius:10px;--border:#1e2d50;
+  --modal-bg:rgba(0,0,0,.7);
 }
-[data-theme="light"] {
-  --bg: #f5f6fa; --surface: #ffffff; --card: #ffffff;
-  --accent: #c0392b; --accent2: #2980b9; --text: #2c3e50;
-  --muted: #7f8c8d; --green: #27ae60; --yellow: #f39c12;
-  --red: #e74c3c; --border: #dde1e7;
-  --modal-bg: rgba(0,0,0,.45);
+[data-theme="light"]{
+  --bg:#f5f6fa;--surface:#ffffff;--card:#ffffff;
+  --accent:#c0392b;--accent2:#2980b9;--text:#2c3e50;
+  --muted:#7f8c8d;--green:#27ae60;--yellow:#f39c12;
+  --red:#e74c3c;--border:#dde1e7;--modal-bg:rgba(0,0,0,.45);
 }
-
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
@@ -32,10 +25,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 header{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:100;}
 header h1{font-size:1.1rem;font-weight:700;color:var(--accent);flex:1;white-space:nowrap;}
 .updated{font-size:.75rem;color:var(--muted);white-space:nowrap;}
-.theme-toggle{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:20px;padding:5px 12px;cursor:pointer;font-size:.82rem;display:flex;align-items:center;gap:5px;transition:all .2s;}
+.theme-toggle{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:20px;padding:5px 12px;cursor:pointer;font-size:.82rem;transition:all .2s;}
 .theme-toggle:hover{border-color:var(--accent2);}
 
-/* STATS BAR */
+/* STATS */
 .stats{display:flex;gap:8px;padding:10px 20px;flex-wrap:wrap;background:var(--surface);border-bottom:1px solid var(--border);}
 .stat-box{background:var(--bg);border-radius:8px;padding:6px 14px;font-size:.8rem;color:var(--muted);}
 .stat-box strong{color:var(--accent2);font-size:1rem;}
@@ -46,7 +39,7 @@ header h1{font-size:1.1rem;font-weight:700;color:var(--accent);flex:1;white-spac
 .search-wrap input{width:100%;padding:9px 36px 9px 14px;border-radius:var(--radius);border:2px solid var(--border);background:var(--surface);color:var(--text);font-size:.9rem;outline:none;transition:border-color .2s;}
 .search-wrap input:focus{border-color:var(--accent2);}
 .search-wrap input::placeholder{color:var(--muted);}
-.clear-search{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:2px;}
+.clear-search{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;}
 select{padding:9px 12px;border-radius:var(--radius);border:2px solid var(--border);background:var(--surface);color:var(--text);font-size:.85rem;outline:none;cursor:pointer;}
 select:focus{border-color:var(--accent2);}
 .btn-clear{padding:9px 14px;border-radius:var(--radius);border:2px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-size:.82rem;white-space:nowrap;transition:all .2s;}
@@ -59,6 +52,10 @@ select:focus{border-color:var(--accent2);}
 .sort-bar span{font-size:.78rem;color:var(--muted);}
 .sort-btn{padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-size:.78rem;transition:all .2s;}
 .sort-btn.active{background:var(--accent2);color:#111;border-color:var(--accent2);}
+
+/* BTN RESTOCK у тулбарі */
+.btn-restock-top{padding:9px 16px;border-radius:var(--radius);border:none;background:var(--accent2);color:#111;font-size:.85rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity .2s;}
+.btn-restock-top:hover{opacity:.85;}
 
 /* RESULTS */
 .results{max-width:960px;margin:0 auto;padding:14px 20px;display:flex;flex-direction:column;gap:8px;}
@@ -85,24 +82,38 @@ select:focus{border-color:var(--accent2);}
 .btn-sale:hover{opacity:.85;}
 .btn-return{padding:6px 12px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.78rem;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .btn-return:hover{border-color:var(--accent2);color:var(--accent2);}
+.btn-restock{padding:6px 12px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--accent2);font-size:.78rem;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.btn-restock:hover{background:var(--accent2);color:#111;border-color:var(--accent2);}
 
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:var(--modal-bg);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;}
-.modal{background:var(--surface);border-radius:14px;padding:24px;width:100%;max-width:400px;border:1px solid var(--border);}
+.modal{background:var(--surface);border-radius:14px;padding:24px;width:100%;max-width:440px;border:1px solid var(--border);}
 .modal h2{font-size:1rem;font-weight:700;margin-bottom:4px;}
 .modal .subtitle{font-size:.82rem;color:var(--muted);margin-bottom:16px;}
 .modal label{font-size:.82rem;color:var(--muted);display:block;margin-bottom:5px;margin-top:12px;}
-.modal select,.modal input[type=text]{width:100%;padding:9px 12px;border-radius:8px;border:2px solid var(--border);background:var(--bg);color:var(--text);font-size:.9rem;outline:none;}
-.modal select:focus,.modal input[type=text]:focus{border-color:var(--accent2);}
+.modal select,.modal input[type=text],.modal input[type=number]{width:100%;padding:9px 12px;border-radius:8px;border:2px solid var(--border);background:var(--bg);color:var(--text);font-size:.9rem;outline:none;font-family:inherit;}
+.modal select:focus,.modal input:focus{border-color:var(--accent2);}
 .modal-actions{display:flex;gap:8px;margin-top:20px;}
 .btn-confirm{flex:1;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;font-size:.9rem;}
 .btn-confirm:hover{opacity:.9;}
 .btn-cancel{padding:10px 16px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:.9rem;}
 
+/* RESTOCK розміри в модалці */
+.restock-sizes{display:flex;flex-direction:column;gap:8px;margin-top:8px;max-height:260px;overflow-y:auto;}
+.restock-row{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center;}
+.restock-row input{padding:8px 10px;border-radius:8px;border:2px solid var(--border);background:var(--bg);color:var(--text);font-size:.9rem;outline:none;font-family:inherit;width:100%;}
+.restock-row input:focus{border-color:var(--accent2);}
+.btn-remove-row{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;padding:4px 6px;border-radius:5px;transition:color .2s;}
+.btn-remove-row:hover{color:var(--red);}
+.btn-add-row{margin-top:6px;padding:7px 14px;border-radius:8px;border:2px dashed var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:.82rem;width:100%;transition:all .2s;}
+.btn-add-row:hover{border-color:var(--accent2);color:var(--accent2);}
+.restock-header{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;font-size:.75rem;color:var(--muted);padding:0 2px;}
+
 /* TOAST */
 .toast-wrap{position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column;gap:8px;z-index:999;}
 .toast{background:var(--card);color:var(--text);padding:10px 16px;border-radius:8px;font-size:.85rem;border-left:4px solid var(--green);animation:toastIn .3s ease;box-shadow:0 4px 20px rgba(0,0,0,.3);}
 .toast.err{border-left-color:var(--red);}
+.toast.info{border-left-color:var(--accent2);}
 @keyframes toastIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
 
 /* SPINNER */
@@ -113,20 +124,16 @@ select:focus{border-color:var(--accent2);}
   .shoe-card{grid-template-columns:1fr auto;grid-template-rows:auto auto auto;}
   .sizes-col{grid-column:1/-1;}
   .qty-badge{grid-row:1;grid-column:2;}
-  .actions-col{grid-column:1/-1;flex-direction:row;}
+  .actions-col{grid-column:1/-1;flex-direction:row;flex-wrap:wrap;}
 }
 </style>
 </head>
 <body>
 
-<!-- ═══ КОНФІГУРАЦІЯ ═══════════════════════════════════════════ -->
 <script>
-// ⚠️ ЗАМІНІТЬ ЦІ ДВА РЯДКИ ПЕРЕД ВИКОРИСТАННЯМ
-const SHEET_ID        = '1Fx0bib3W7AAcP2h2glA6tS93fGiCucEeNSSNiMat8qk';
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyJWiqo_NpNSx_wiwjDwqzfgNIx_qMkb0nD0NEJoI1u6VIfpQ3KO0GgX7YsnI-lQNTR/exec';
-// Наприклад:
-// const SHEET_ID = '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms';
-// const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfy.../exec';
+// ⚠️ ЗАМІНІТЬ ЦІ ДВА РЯДКИ
+const SHEET_ID        = 'ВСТАВТЕ_SHEET_ID_СЮДИ';
+const APPS_SCRIPT_URL = 'ВСТАВТЕ_URL_APPS_SCRIPT_СЮДИ';
 </script>
 
 <!-- HEADER -->
@@ -137,11 +144,12 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyJWiqo_NpNSx_w
 </header>
 
 <!-- STATS -->
-<div class="stats" id="statsBar">
+<div class="stats">
   <div class="stat-box">Моделей: <strong id="sFound">—</strong></div>
   <div class="stat-box">Залишок: <strong id="sStock">—</strong> пар</div>
   <div class="stat-box">Продажів сьогодні: <strong id="sSales">—</strong></div>
   <div class="stat-box">Повернень сьогодні: <strong id="sReturns">—</strong></div>
+  <div class="stat-box">Надходжень сьогодні: <strong id="sRestock">—</strong></div>
 </div>
 
 <!-- TOOLBAR -->
@@ -153,9 +161,10 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyJWiqo_NpNSx_w
   <select id="sizeSelect"><option value="">Всі розміри</option></select>
   <button class="btn-clear" onclick="clearAll()">✕ Очистити</button>
   <button class="toggle-stock" id="toggleBtn" onclick="toggleNoStock()">Сховати без залишку</button>
+  <button class="btn-restock-top" onclick="openRestockNew()">+ Надходження</button>
 </div>
 
-<!-- SORT BAR -->
+<!-- SORT -->
 <div class="sort-bar">
   <span>Сортування:</span>
   <button class="sort-btn active" data-sort="sales" onclick="setSort(this)">За продажами ↓</button>
@@ -166,21 +175,20 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyJWiqo_NpNSx_w
 
 <!-- RESULTS -->
 <div class="results" id="results">
-  <div class="empty"><span>⏳</span>Завантаження даних...</div>
+  <div class="empty"><span>⏳</span>Завантаження...</div>
 </div>
 
-<!-- TOAST CONTAINER -->
 <div class="toast-wrap" id="toastWrap"></div>
 
-<!-- MODAL -->
+<!-- MODAL — Продаж / Повернення -->
 <div class="modal-overlay" id="modal" style="display:none">
   <div class="modal">
-    <h2 id="modalTitle">Продаж</h2>
+    <h2 id="modalTitle"></h2>
     <div class="subtitle" id="modalSubtitle"></div>
     <label id="sizeLabel">Розмір</label>
     <select id="modalSize"></select>
-    <label id="extraLabel" style="display:none">Продавець / Причина</label>
-    <input type="text" id="modalExtra" placeholder="" style="display:none">
+    <label id="extraLabel"></label>
+    <input type="text" id="modalExtra" placeholder="">
     <div class="modal-actions">
       <button class="btn-confirm" id="modalConfirm" onclick="confirmModal()">Підтвердити</button>
       <button class="btn-cancel" onclick="closeModal()">Скасувати</button>
@@ -188,25 +196,53 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyJWiqo_NpNSx_w
   </div>
 </div>
 
+<!-- MODAL — Надходження -->
+<div class="modal-overlay" id="modalRestock" style="display:none">
+  <div class="modal">
+    <h2>📦 Надходження товару</h2>
+    <div class="subtitle" id="restockSubtitle">Оберіть модель або введіть нову</div>
+
+    <label>Назва моделі</label>
+    <select id="restockName" onchange="onRestockNameChange()">
+      <option value="">— нова модель —</option>
+    </select>
+    <input type="text" id="restockNameNew" placeholder="Введіть назву нової моделі" style="margin-top:8px;display:none">
+
+    <label>Ціна (грн)</label>
+    <input type="number" id="restockPrice" placeholder="Наприклад: 1500" min="0">
+
+    <label>Розміри та кількість</label>
+    <div class="restock-header"><span>Розмір</span><span>Кількість</span><span></span></div>
+    <div class="restock-sizes" id="restockSizes"></div>
+    <button class="btn-add-row" onclick="addRestockRow()">+ Додати розмір</button>
+
+    <div class="modal-actions">
+      <button class="btn-confirm" id="restockConfirm" onclick="confirmRestock()" style="background:var(--accent2);color:#111">Зберегти надходження</button>
+      <button class="btn-cancel" onclick="closeRestockModal()">Скасувати</button>
+    </div>
+  </div>
+</div>
+
 <script>
-// ═══════════════════════════════════════════════
-// СТАН ЗАСТОСУНКУ
-// ═══════════════════════════════════════════════
-let shoes = [];          // масив моделей {name, price, sizes: {size:qty}}
-let salesLog = [];       // рядки з аркушу «Продажі»
-let returnsLog = [];     // рядки з аркушу «Повернення»
+// ═══════════════════════════════════════════
+// СТАН
+// ═══════════════════════════════════════════
+let shoes = [];
+let salesLog = [];
+let returnsLog = [];
+let restockLog = [];
 let showNoStock = true;
 let currentSort = 'sales';
-let modalMode = null;    // 'sale' | 'return'
+let modalMode = null;
 let modalShoe = null;
 let lastSeller = '';
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════
 // ТЕМА
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════
 function applyTheme(t) {
   document.documentElement.dataset.theme = t;
-  document.getElementById('themeBtn').textContent = t === 'dark' ? '☀️ Світла' : '🌙 Темна';
+  document.getElementById('themeBtn').textContent = t === 'dark' ? '\u2600\ufe0f Світла' : '\uD83C\uDF19 Темна';
   localStorage.setItem('theme', t);
 }
 function toggleTheme() {
@@ -214,45 +250,18 @@ function toggleTheme() {
 }
 applyTheme(localStorage.getItem('theme') || 'dark');
 
-// ═══════════════════════════════════════════════
-// ЗАВАНТАЖЕННЯ ДАНИХ З GOOGLE SHEETS (публічний CSV)
-// ═══════════════════════════════════════════════
-async function loadStock() {
-  // Структура аркушу «Асортимент»:
-  // Рядок 1: заголовок (пропускаємо)
-  // Колонки: A=Назва | B=Ціна | C=Розмір1 | D=К-сть1 | E=Розмір2 | F=К-сть2 | ...
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=%D0%90%D1%81%D0%BE%D1%80%D1%82%D0%B8%D0%BC%D0%B5%D0%BD%D1%82`;
-  const res = await fetch(url);
-  const text = await res.text();
-  const rows = parseCSV(text);
-  shoes = [];
-  for (let i = 1; i < rows.length; i++) {
-    const r = rows[i];
-    if (!r[0]) continue;
-    const name = r[0].trim();
-    const price = Number(r[1]) || 0;
-    const sizes = {};
-    for (let c = 2; c + 1 < r.length; c += 2) {
-      const sz = Number(r[c]);
-      const qty = Number(r[c+1]);
-      if (sz) sizes[sz] = (sizes[sz] || 0) + qty;
-    }
-    shoes.push({ name, price, sizes });
-  }
+// ═══════════════════════════════════════════
+// ЗАВАНТАЖЕННЯ ДАНИХ
+// ═══════════════════════════════════════════
+function encodeSheet(name) {
+  return encodeURIComponent(name);
 }
 
-async function loadSales() {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=%D0%9F%D1%80%D0%BE%D0%B4%D0%B0%D0%B6%D1%96`;
+async function loadSheet(sheetName) {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeSheet(sheetName)}`;
   const res = await fetch(url);
   const text = await res.text();
-  salesLog = parseCSV(text).slice(1);
-}
-
-async function loadReturns() {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=%D0%9F%D0%BE%D0%B2%D0%B5%D1%80%D0%BD%D0%B5%D0%BD%D0%BD%D1%8F`;
-  const res = await fetch(url);
-  const text = await res.text();
-  returnsLog = parseCSV(text).slice(1);
+  return parseCSV(text);
 }
 
 function parseCSV(text) {
@@ -269,47 +278,73 @@ function parseCSV(text) {
   }).filter(r => r.some(c => c));
 }
 
+async function loadStock() {
+  // Структура: A=Назва | B=Ціна | C=Розмір1 | D=К-сть1 | E=Розмір2 | F=К-сть2 | ...
+  const rows = await loadSheet('Асортимент');
+  shoes = [];
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i];
+    if (!r[0]) continue;
+    const name  = r[0].trim();
+    const price = Number(r[1]) || 0;
+    const sizes = {};
+    for (let c = 2; c + 1 < r.length; c += 2) {
+      const sz  = Number(r[c]);
+      const qty = Number(r[c + 1]);
+      if (sz) sizes[sz] = (sizes[sz] || 0) + qty;
+    }
+    shoes.push({ name, price, sizes });
+  }
+}
+
+async function loadSales() {
+  const rows = await loadSheet('Продажі');
+  salesLog = rows.slice(1);
+}
+async function loadReturns() {
+  const rows = await loadSheet('Повернення');
+  returnsLog = rows.slice(1);
+}
+async function loadRestock() {
+  const rows = await loadSheet('Надходження');
+  restockLog = rows.slice(1);
+}
+
 async function refreshAll() {
   try {
-    await Promise.all([loadStock(), loadSales(), loadReturns()]);
+    await Promise.all([loadStock(), loadSales(), loadReturns(), loadRestock()]);
     buildSizeFilter();
     render();
     document.getElementById('updated').textContent =
       'Оновлено: ' + new Date().toLocaleTimeString('uk-UA');
-  } catch(e) {
-    toast('Помилка завантаження даних. Перевірте Sheet ID та доступ.', true);
+  } catch(err) {
+    toast('Помилка завантаження. Перевірте Sheet ID та доступ.', 'err');
     document.getElementById('updated').textContent = 'Помилка оновлення';
   }
 }
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════
 // СТАТИСТИКА
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════
 function todayStr() {
-  return new Date().toLocaleDateString('uk-UA', {day:'2-digit',month:'2-digit',year:'numeric'}).replace(/\//g,'.');
+  return new Date().toLocaleDateString('uk-UA',{day:'2-digit',month:'2-digit',year:'numeric'}).replace(/\//g,'.');
 }
-
 function getStats(filtered) {
   const today = todayStr();
-  const salesToday = salesLog.filter(r => r[0] === today).length;
-  const returnsToday = returnsLog.filter(r => r[0] === today).length;
-  const totalStock = filtered.reduce((s, sh) => s + Object.values(sh.sizes).reduce((a,b)=>a+b,0), 0);
-  document.getElementById('sFound').textContent = filtered.length;
-  document.getElementById('sStock').textContent = totalStock;
-  document.getElementById('sSales').textContent = salesToday;
-  document.getElementById('sReturns').textContent = returnsToday;
+  document.getElementById('sFound').textContent   = filtered.length;
+  document.getElementById('sStock').textContent   = filtered.reduce((s,sh)=>s+Object.values(sh.sizes).reduce((a,b)=>a+b,0),0);
+  document.getElementById('sSales').textContent   = salesLog.filter(r=>r[0]===today).length;
+  document.getElementById('sReturns').textContent = returnsLog.filter(r=>r[0]===today).length;
+  document.getElementById('sRestock').textContent = restockLog.filter(r=>r[0]===today).length;
 }
 
-// ═══════════════════════════════════════════════
-// КІЛЬКІСТЬ ПРОДАЖІВ НА МОДЕЛЬ
-// ═══════════════════════════════════════════════
 function salesCountFor(name) {
   return salesLog.filter(r => r[2] === name).length;
 }
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════
 // ФІЛЬТР РОЗМІРІВ
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════
 function buildSizeFilter() {
   const all = new Set();
   shoes.forEach(s => Object.keys(s.sizes).forEach(sz => all.add(Number(sz))));
@@ -324,29 +359,28 @@ function buildSizeFilter() {
   sel.value = prev;
 }
 
-// ═══════════════════════════════════════════════
-// ВІДОБРАЖЕННЯ КАРТОК
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════
+// РЕНДЕР КАРТОК
+// ═══════════════════════════════════════════
 function render() {
-  const query = document.getElementById('searchInput').value.toLowerCase().replace(/\s+/g,'');
+  const query      = document.getElementById('searchInput').value.toLowerCase().replace(/\s+/g,'');
   const filterSize = Number(document.getElementById('sizeSelect').value) || null;
 
   let list = shoes.filter(s => {
-    const nameMatch = !query || s.name.toLowerCase().replace(/\s+/g,'').includes(query);
-    const sizeMatch = !filterSize || (s.sizes[filterSize] !== undefined);
-    const totalQty = Object.values(s.sizes).reduce((a,b)=>a+b,0);
+    const nameMatch  = !query || s.name.toLowerCase().replace(/\s+/g,'').includes(query);
+    const sizeMatch  = !filterSize || s.sizes[filterSize] !== undefined;
+    const totalQty   = Object.values(s.sizes).reduce((a,b)=>a+b,0);
     const stockMatch = showNoStock || totalQty > 0;
     return nameMatch && sizeMatch && stockMatch;
   });
 
-  // Сортування
   list.sort((a,b) => {
     const qA = Object.values(a.sizes).reduce((x,y)=>x+y,0);
     const qB = Object.values(b.sizes).reduce((x,y)=>x+y,0);
-    if (currentSort === 'sales') return salesCountFor(b.name) - salesCountFor(a.name);
-    if (currentSort === 'stock') return qB - qA;
-    if (currentSort === 'name')  return a.name.localeCompare(b.name,'uk');
-    if (currentSort === 'price') return b.price - a.price;
+    if (currentSort==='sales') return salesCountFor(b.name)-salesCountFor(a.name);
+    if (currentSort==='stock') return qB-qA;
+    if (currentSort==='name')  return a.name.localeCompare(b.name,'uk');
+    if (currentSort==='price') return b.price-a.price;
     return 0;
   });
 
@@ -360,19 +394,16 @@ function render() {
 
   container.innerHTML = list.map(shoe => {
     const totalQty = Object.values(shoe.sizes).reduce((a,b)=>a+b,0);
-    let cls = 'in-stock';
-    if (totalQty === 0) cls = 'no-stock';
-    else if (totalQty <= 2) cls = 'low-stock';
-
+    const cls = totalQty===0 ? 'no-stock' : totalQty<=2 ? 'low-stock' : 'in-stock';
     const saleCount = salesCountFor(shoe.name);
-
     const sizeTags = Object.entries(shoe.sizes)
       .sort((a,b)=>Number(a[0])-Number(b[0]))
-      .map(([sz,qty]) => {
-        const hl = filterSize && Number(sz) === filterSize ? 'hl' : '';
-        return `<span class="size-tag ${hl}">${sz}${qty>1?' ×'+qty:''}</span>`;
+      .map(([sz,qty])=>{
+        const hl = filterSize && Number(sz)===filterSize ? 'hl' : '';
+        return `<span class="size-tag ${hl}">${sz}${qty>1?' \xd7'+qty:''}</span>`;
       }).join('');
 
+    const nameJ = JSON.stringify(shoe.name);
     return `
     <div class="shoe-card ${cls}">
       <div class="shoe-info">
@@ -380,175 +411,274 @@ function render() {
         <div class="shoe-price">${shoe.price.toLocaleString('uk-UA')} грн</div>
         <div class="shoe-sold">Продано: ${saleCount} пар</div>
       </div>
-      <div class="sizes-col">${sizeTags || '<span style="color:var(--muted);font-size:.78rem">—</span>'}</div>
+      <div class="sizes-col">${sizeTags||'<span style="color:var(--muted);font-size:.78rem">\u2014</span>'}</div>
       <div class="qty-badge"><strong>${totalQty}</strong>пар</div>
       <div class="actions-col">
-        <button class="btn-sale" onclick='openSale(${JSON.stringify(shoe.name)})'>Продаж</button>
-        <button class="btn-return" onclick='openReturn(${JSON.stringify(shoe.name)})'>Повернення</button>
+        <button class="btn-sale"    onclick='openSale(${nameJ})'>Продаж</button>
+        <button class="btn-return"  onclick='openReturn(${nameJ})'>Повернення</button>
+        <button class="btn-restock" onclick='openRestockExisting(${nameJ})'>+ Надходження</button>
       </div>
     </div>`;
   }).join('');
 }
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════
 // ФІЛЬТРИ / СОРТУВАННЯ
-// ═══════════════════════════════════════════════
-function toggleNoStock() {
-  showNoStock = !showNoStock;
-  const btn = document.getElementById('toggleBtn');
-  btn.classList.toggle('active', !showNoStock);
-  btn.textContent = showNoStock ? 'Сховати без залишку' : 'Показати без залишку';
+// ═══════════════════════════════════════════
+function toggleNoStock(){
+  showNoStock=!showNoStock;
+  const btn=document.getElementById('toggleBtn');
+  btn.classList.toggle('active',!showNoStock);
+  btn.textContent=showNoStock?'Сховати без залишку':'Показати без залишку';
   render();
 }
-function clearSearch() { document.getElementById('searchInput').value=''; render(); }
-function clearAll() { document.getElementById('searchInput').value=''; document.getElementById('sizeSelect').value=''; render(); }
-function setSort(btn) {
+function clearSearch(){document.getElementById('searchInput').value='';render();}
+function clearAll(){document.getElementById('searchInput').value='';document.getElementById('sizeSelect').value='';render();}
+function setSort(btn){
   document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  currentSort = btn.dataset.sort;
+  currentSort=btn.dataset.sort;
   render();
 }
-document.getElementById('searchInput').addEventListener('input', render);
-document.getElementById('sizeSelect').addEventListener('change', render);
+document.getElementById('searchInput').addEventListener('input',render);
+document.getElementById('sizeSelect').addEventListener('change',render);
 
-// ═══════════════════════════════════════════════
-// МОДАЛЬНЕ ВІКНО — ПРОДАЖ
-// ═══════════════════════════════════════════════
-function openSale(name) {
-  const shoe = shoes.find(s => s.name === name);
-  if (!shoe) return;
-  modalMode = 'sale';
-  modalShoe = shoe;
-  document.getElementById('modalTitle').textContent = '🛍 Продаж';
-  document.getElementById('modalSubtitle').textContent = shoe.name;
-  document.getElementById('sizeLabel').textContent = 'Оберіть розмір';
-  document.getElementById('extraLabel').style.display = '';
-  document.getElementById('extraLabel').textContent = 'Продавець';
-  document.getElementById('modalExtra').style.display = '';
-  document.getElementById('modalExtra').placeholder = 'Імя продавця';
-  document.getElementById('modalExtra').value = lastSeller;
-  document.getElementById('modalConfirm').textContent = 'Підтвердити продаж';
-
-  const sel = document.getElementById('modalSize');
-  sel.innerHTML = '';
+// ═══════════════════════════════════════════
+// МОДАЛЬ — ПРОДАЖ
+// ═══════════════════════════════════════════
+function openSale(name){
+  const shoe=shoes.find(s=>s.name===name); if(!shoe)return;
+  modalMode='sale'; modalShoe=shoe;
+  document.getElementById('modalTitle').textContent='\uD83D\uDECD Продаж';
+  document.getElementById('modalSubtitle').textContent=shoe.name;
+  document.getElementById('sizeLabel').textContent='Оберіть розмір';
+  document.getElementById('extraLabel').textContent='Продавець';
+  document.getElementById('modalExtra').placeholder='Ім\u2019я продавця';
+  document.getElementById('modalExtra').value=lastSeller;
+  document.getElementById('modalConfirm').textContent='Підтвердити продаж';
+  const sel=document.getElementById('modalSize');
+  sel.innerHTML='';
   Object.entries(shoe.sizes).sort((a,b)=>Number(a[0])-Number(b[0])).forEach(([sz,qty])=>{
-    const o = document.createElement('option');
-    o.value = sz;
-    o.textContent = `${sz} (залишок: ${qty})`;
-    if (qty === 0) o.textContent += ' — відсутній';
+    const o=document.createElement('option');
+    o.value=sz;
+    o.textContent=`${sz} (залишок: ${qty})${qty===0?' — відсутній':''}`;
     sel.appendChild(o);
   });
-  document.getElementById('modal').style.display = 'flex';
+  document.getElementById('modal').style.display='flex';
 }
 
-// ═══════════════════════════════════════════════
-// МОДАЛЬНЕ ВІКНО — ПОВЕРНЕННЯ
-// ═══════════════════════════════════════════════
-function openReturn(name) {
-  const shoe = shoes.find(s => s.name === name);
-  if (!shoe) return;
-  modalMode = 'return';
-  modalShoe = shoe;
-  document.getElementById('modalTitle').textContent = '↩️ Повернення';
-  document.getElementById('modalSubtitle').textContent = shoe.name;
-  document.getElementById('sizeLabel').textContent = 'Оберіть розмір';
-  document.getElementById('extraLabel').style.display = '';
-  document.getElementById('extraLabel').textContent = 'Причина (необовязково)';
-  document.getElementById('modalExtra').style.display = '';
-  document.getElementById('modalExtra').placeholder = 'Наприклад: не підійшов розмір';
-  document.getElementById('modalExtra').value = '';
-  document.getElementById('modalConfirm').textContent = 'Підтвердити повернення';
-
-  const sel = document.getElementById('modalSize');
-  sel.innerHTML = '';
+// ═══════════════════════════════════════════
+// МОДАЛЬ — ПОВЕРНЕННЯ
+// ═══════════════════════════════════════════
+function openReturn(name){
+  const shoe=shoes.find(s=>s.name===name); if(!shoe)return;
+  modalMode='return'; modalShoe=shoe;
+  document.getElementById('modalTitle').textContent='\u21a9\ufe0f Повернення';
+  document.getElementById('modalSubtitle').textContent=shoe.name;
+  document.getElementById('sizeLabel').textContent='Оберіть розмір';
+  document.getElementById('extraLabel').textContent='Причина (необов\u2019язково)';
+  document.getElementById('modalExtra').placeholder='Наприклад: не підійшов розмір';
+  document.getElementById('modalExtra').value='';
+  document.getElementById('modalConfirm').textContent='Підтвердити повернення';
+  const sel=document.getElementById('modalSize');
+  sel.innerHTML='';
   Object.entries(shoe.sizes).sort((a,b)=>Number(a[0])-Number(b[0])).forEach(([sz,qty])=>{
-    const o = document.createElement('option');
-    o.value = sz;
-    o.textContent = `${sz} (поточний залишок: ${qty})`;
+    const o=document.createElement('option');
+    o.value=sz; o.textContent=`${sz} (залишок: ${qty})`;
     sel.appendChild(o);
   });
-  document.getElementById('modal').style.display = 'flex';
+  document.getElementById('modal').style.display='flex';
 }
 
-function closeModal() { document.getElementById('modal').style.display = 'none'; }
+function closeModal(){document.getElementById('modal').style.display='none';}
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
 
-// ═══════════════════════════════════════════════
-// ПІДТВЕРДЖЕННЯ ДІЇ → POST у Apps Script
-// ═══════════════════════════════════════════════
-async function confirmModal() {
-  const size = Number(document.getElementById('modalSize').value);
-  const extra = document.getElementById('modalExtra').value.trim();
-  const confirmBtn = document.getElementById('modalConfirm');
-
-  if (!size) { toast('Оберіть розмір', true); return; }
-  if (modalMode === 'sale' && !extra) { toast('Вкажіть імя продавця', true); return; }
-
-  confirmBtn.disabled = true;
-  confirmBtn.innerHTML = '<span class="spinner"></span>Запис...';
-
-  const payload = { action: modalMode };
-  if (modalMode === 'sale') {
-    payload.name = modalShoe.name;
-    payload.size = size;
-    payload.seller = extra;
-    lastSeller = extra;
-  } else {
-    payload.name = modalShoe.name;
-    payload.size = size;
-    payload.reason = extra;
+// ═══════════════════════════════════════════
+// ПІДТВЕРДЖЕННЯ ПРОДАЖ / ПОВЕРНЕННЯ
+// ═══════════════════════════════════════════
+async function confirmModal(){
+  const size=Number(document.getElementById('modalSize').value);
+  const extra=document.getElementById('modalExtra').value.trim();
+  const btn=document.getElementById('modalConfirm');
+  if(!size){toast('Оберіть розмір','err');return;}
+  if(modalMode==='sale'&&!extra){toast('Вкажіть ім\u2019я продавця','err');return;}
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner"></span>Запис...';
+  const payload={action:modalMode,name:modalShoe.name,size};
+  if(modalMode==='sale'){payload.seller=extra;lastSeller=extra;}
+  else{payload.reason=extra;}
+  try{
+    await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    if(modalMode==='sale'){
+      if(modalShoe.sizes[size]>0)modalShoe.sizes[size]--;
+      salesLog.push([todayStr(),'',modalShoe.name,size,extra]);
+      toast(`\u2705 Продаж: ${modalShoe.name} \u2014 ${size} розмір`);
+    }else{
+      modalShoe.sizes[size]=(modalShoe.sizes[size]||0)+1;
+      returnsLog.push([todayStr(),'',modalShoe.name,size,extra]);
+      toast(`\u21a9\ufe0f Повернення: ${modalShoe.name} \u2014 ${size} розмір`);
+    }
+    closeModal(); render();
+  }catch{
+    toast('Помилка запису. Перевірте Apps Script URL.','err');
+  }finally{
+    btn.disabled=false;
+    btn.textContent=modalMode==='sale'?'Підтвердити продаж':'Підтвердити повернення';
   }
+}
 
-  try {
-    await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
+// ═══════════════════════════════════════════
+// МОДАЛЬ — НАДХОДЖЕННЯ
+// ═══════════════════════════════════════════
+function buildRestockNameSelect(selectedName=''){
+  const sel=document.getElementById('restockName');
+  sel.innerHTML='<option value="">— нова модель —</option>';
+  shoes.forEach(s=>{
+    const o=document.createElement('option');
+    o.value=s.name; o.textContent=s.name;
+    if(s.name===selectedName)o.selected=true;
+    sel.appendChild(o);
+  });
+}
+
+function onRestockNameChange(){
+  const val=document.getElementById('restockName').value;
+  const newInput=document.getElementById('restockNameNew');
+  newInput.style.display=val?'none':'';
+  if(val){
+    const shoe=shoes.find(s=>s.name===val);
+    if(shoe){
+      document.getElementById('restockPrice').value=shoe.price||'';
+      // Показуємо поточні розміри для зручності
+      clearRestockRows();
+      Object.entries(shoe.sizes).sort((a,b)=>Number(a[0])-Number(b[0])).forEach(([sz])=>{
+        addRestockRow(sz,'');
+      });
+      if(Object.keys(shoe.sizes).length===0) addRestockRow('','');
+    }
+  }
+}
+
+function openRestockNew(){
+  buildRestockNameSelect('');
+  document.getElementById('restockNameNew').style.display='';
+  document.getElementById('restockNameNew').value='';
+  document.getElementById('restockPrice').value='';
+  document.getElementById('restockSubtitle').textContent='Нова модель або оберіть існуючу';
+  clearRestockRows();
+  addRestockRow('','');
+  document.getElementById('modalRestock').style.display='flex';
+}
+
+function openRestockExisting(name){
+  buildRestockNameSelect(name);
+  document.getElementById('restockNameNew').style.display='none';
+  const shoe=shoes.find(s=>s.name===name);
+  document.getElementById('restockPrice').value=shoe?shoe.price:'';
+  document.getElementById('restockSubtitle').textContent=name;
+  clearRestockRows();
+  if(shoe && Object.keys(shoe.sizes).length>0){
+    Object.entries(shoe.sizes).sort((a,b)=>Number(a[0])-Number(b[0])).forEach(([sz])=>{
+      addRestockRow(sz,'');
     });
+  } else {
+    addRestockRow('','');
+  }
+  document.getElementById('modalRestock').style.display='flex';
+}
 
-    // Миттєве оновлення локального стану
-    if (modalMode === 'sale') {
-      if (modalShoe.sizes[size] > 0) modalShoe.sizes[size]--;
-      salesLog.push([todayStr(), '', modalShoe.name, size, extra]);
-      toast(`✅ Продаж: ${modalShoe.name} — ${size} розмір`);
-    } else {
-      modalShoe.sizes[size] = (modalShoe.sizes[size] || 0) + 1;
-      returnsLog.push([todayStr(), '', modalShoe.name, size, extra]);
-      toast(`↩️ Повернення: ${modalShoe.name} — ${size} розмір`);
+function clearRestockRows(){
+  document.getElementById('restockSizes').innerHTML='';
+}
+
+function addRestockRow(sz='',qty=''){
+  const wrap=document.getElementById('restockSizes');
+  const row=document.createElement('div');
+  row.className='restock-row';
+  row.innerHTML=`
+    <input type="number" class="rs-size" placeholder="Розмір" value="${sz}" min="30" max="50">
+    <input type="number" class="rs-qty"  placeholder="К-сть"  value="${qty}" min="0">
+    <button class="btn-remove-row" onclick="this.parentElement.remove()" title="Видалити">\u2715</button>`;
+  wrap.appendChild(row);
+  row.querySelector('.rs-size').focus();
+}
+
+function closeRestockModal(){document.getElementById('modalRestock').style.display='none';}
+document.getElementById('modalRestock').addEventListener('click',function(e){if(e.target===this)closeRestockModal();});
+
+async function confirmRestock(){
+  // Визначаємо назву
+  const selVal=document.getElementById('restockName').value;
+  const newVal=document.getElementById('restockNameNew').value.trim();
+  const name=selVal||newVal;
+  if(!name){toast('Введіть назву моделі','err');return;}
+
+  const price=Number(document.getElementById('restockPrice').value)||0;
+
+  // Збираємо рядки розмірів
+  const rows=[...document.querySelectorAll('.restock-row')];
+  const pairs=[];
+  for(const row of rows){
+    const sz=Number(row.querySelector('.rs-size').value);
+    const qty=Number(row.querySelector('.rs-qty').value);
+    if(!sz){toast('Заповніть всі розміри','err');return;}
+    if(qty<=0){toast('Кількість має бути більше 0','err');return;}
+    pairs.push({size:sz,qty});
+  }
+  if(!pairs.length){toast('Додайте хоча б один розмір','err');return;}
+
+  const btn=document.getElementById('restockConfirm');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner"></span>Запис...';
+
+  try{
+    // Відправляємо кожну пару окремим POST (або всі разом)
+    for(const p of pairs){
+      await fetch(APPS_SCRIPT_URL,{
+        method:'POST',mode:'no-cors',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'restock',name,size:p.size,qty:p.qty,price,comment:'HTML-застосунок'})
+      });
+      // Оновлюємо локальний стан
+      let shoe=shoes.find(s=>s.name===name);
+      if(!shoe){
+        shoe={name,price,sizes:{}};
+        shoes.push(shoe);
+      }
+      shoe.price=price;
+      shoe.sizes[p.size]=(shoe.sizes[p.size]||0)+p.qty;
+      restockLog.push([todayStr(),'',name,p.size,p.qty]);
     }
 
-    closeModal();
+    toast(`\uD83D\uDCE6 Надходження збережено: ${name} (${pairs.length} розм.)`, 'info');
+    closeRestockModal();
+    buildSizeFilter();
     render();
-  } catch(e) {
-    toast('Помилка запису. Перевірте Apps Script URL.', true);
-  } finally {
-    confirmBtn.disabled = false;
-    confirmBtn.textContent = modalMode === 'sale' ? 'Підтвердити продаж' : 'Підтвердити повернення';
+  }catch{
+    toast('Помилка запису. Перевірте Apps Script URL.','err');
+  }finally{
+    btn.disabled=false;
+    btn.textContent='Зберегти надходження';
   }
 }
 
-// Закрити модалку по кліку на оверлей
-document.getElementById('modal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
-
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════
 // TOAST
-// ═══════════════════════════════════════════════
-function toast(msg, isErr=false) {
-  const wrap = document.getElementById('toastWrap');
-  const el = document.createElement('div');
-  el.className = 'toast' + (isErr ? ' err' : '');
-  el.textContent = msg;
+// ═══════════════════════════════════════════
+function toast(msg,type='ok'){
+  const wrap=document.getElementById('toastWrap');
+  const el=document.createElement('div');
+  el.className='toast'+(type==='err'?' err':type==='info'?' info':'');
+  el.textContent=msg;
   wrap.appendChild(el);
-  setTimeout(() => el.remove(), 3500);
+  setTimeout(()=>el.remove(),3500);
 }
 
-// ═══════════════════════════════════════════════
-// СТАРТ + АВТООНОВЛЕННЯ
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════
+// СТАРТ
+// ═══════════════════════════════════════════
 refreshAll();
-setInterval(refreshAll, 30000);
+setInterval(refreshAll,30000);
 </script>
 </body>
 </html>
